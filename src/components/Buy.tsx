@@ -12,41 +12,26 @@ import { formatUnits, parseUnits } from "@ethersproject/units";
 export const Buy = () => {
   const classes = UseStyle();
   const [value, setValue] = useState(1);
-  const [isWhitelisted, setWhitelisted] = useState(false);
   const [salePrice, setSalePrice] = useState(0);
-  const [presalePrice, setPresalePrice] = useState(0);
-  const [preSaleOpen, setPresaleOpen] = useState(true);
   const { account, library } = useWeb3React();
 
   const getSalePriceValue = () => {
     const price = value * salePrice;
     return price.toString();
   };
-  const getPreSalePriceValue = () => {
-    const price = value * presalePrice;
-    return price.toString();
-  };
   const handleMint = async () => {
     if (account && library) {
       try {
         const signer = await library.getSigner();
-        if (isWhitelisted && preSaleOpen) {
-          const contract = new Contract(NFTContract, abi, signer);
-          let overRides = {
-            value: parseUnits(getPreSalePriceValue(), "ether"),
-          };
-          const txResult = await contract.presaleMint(value, overRides);
-          await txResult.wait();
-          alert(`${value} Zaidan Clan NFT's minted successfully!`);
-        } else {
+        
           const contract = new Contract(NFTContract, abi, signer);
           let overRides = {
             value: parseUnits(getSalePriceValue(), "ether"),
           };
           const txResult = await contract.mint(value, overRides);
           await txResult.wait();
-          alert(`${value} Zaidan Clan NFT's minted successfully!`);
-        }
+          alert(`${value} Goblindeeznuts NFT's minted successfully!`);
+        
       } catch (err: any) {
         if (err.data) {
           if (err.data.code === -32000) {
@@ -68,29 +53,18 @@ export const Buy = () => {
       console.log(library);
       const signer = await library?.getSigner();
       const contract = new Contract(NFTContract, abi, signer);
-      const wls = await contract.addressInWhitelist(account);
-      const pp = await contract.presalePrice(1);
       const sp = await contract.salePrice(1);
-      const isPreOpen = await contract.isPresaleOpen();
       setSalePrice(Number(formatUnits(sp, "ether")));
-      setPresalePrice(Number(formatUnits(pp, "ether")));
-      setWhitelisted(wls);
-      setPresaleOpen(isPreOpen);
     };
     if (account && library) {
       getMints();
     }
   }, [account, library]);
   const increment = () => {
-    if(preSaleOpen){
-      if (value < 2) {
+    
+      if (value < 10) {
         setValue((value) => value + 1);
       }
-    }else{
-      if (value < 5) {
-        setValue((value) => value + 1);
-      }
-    }
   };
 
   const decrement = () => {
@@ -104,7 +78,6 @@ export const Buy = () => {
         <span>
           <b>Your Address : </b>
           {account}{" "}
-          {isWhitelisted && <Chip color="success" label={isWhitelisted ? "Whitelisted" : ""} />}
         </span>
       </div>
       <div className={classes.title}>Click buy to mint your NFT.</div>
@@ -149,7 +122,7 @@ export const Buy = () => {
           variant="contained"
         >
           {" "}
-          Mint Zaidan Clan NFT
+          Mint Goblindeeznuts NFT
         </Button>
       </div>
     </>
