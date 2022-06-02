@@ -46,7 +46,7 @@ export const Salecard = () => {
           NFT Contract
         </Button>
       </div>
-      <div className={classes.cost}>1 Goblindeeznuts.wtf NFT costs {price} AVAX.</div>
+      <div className={classes.cost}>1 Goblindeeznuts.wtf NFT costs {price} ETH.</div>
 
      {!account &&  <Connect />}
       {account && <Buy />}
